@@ -1,0 +1,12 @@
+#ifndef CONSTANTS_H
+#define CONSTANTS_H
+
+#define BITS_PER_WORD 8
+#define ALPH_SIZE 1 << BITS_PER_WORD
+#define BITS_PER_LONG 32
+#define PSEUDO_EOF ALPH_SIZE
+#define MAGIC_NUMBER 0xface8200
+#define STORE_COUNTS MAGIC_NUMBER | 1
+#define STORE_TREE MAGIC_NUMBER | 2
+
+#endif

@@ -1,0 +1,3 @@
+- Make red-black tree
+- Make hashmap
+- Finish program
