@@ -11,6 +11,7 @@ PriorityQueue* priorityqueue_make(LinkedList* list) {
     pq->con = list;
     return pq;
 }
+
 void priorityqueue_enqueue(PriorityQueue* pq, TreeNode* val) {
     LLIterator* it = lliterator_make(pq->con);
 
@@ -28,9 +29,17 @@ void priorityqueue_enqueue(PriorityQueue* pq, TreeNode* val) {
         lliterator_add(it, val);
     }
 }
+
 TreeNode* priorityqueue_front(PriorityQueue* pq) {
     return pq->con->head->data;
 }
+
+PriorityQueue* priorityqueue_clone(const PriorityQueue* pq) {
+    PriorityQueue* res = malloc(sizeof(PriorityQueue));
+    res->con = pq->con;
+    return res;
+}
+
 TreeNode* priorityqueue_dequeue(PriorityQueue* pq) {
     return linkedlist_pop_front(pq->con);
 }

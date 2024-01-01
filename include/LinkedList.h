@@ -20,6 +20,7 @@ TreeNode* linkedlist_pop_back(LinkedList* list);
 void linkedlist_push_front(LinkedList* list, TreeNode* val);
 TreeNode* linkedlist_pop_front(LinkedList* list);
 void linkedlist_print(const LinkedList* list);
+LinkedList* linkedlist_clone(const LinkedList* list);
 void linkedlist_free(LinkedList* list);
 
 #endif //LINKEDLIST_H

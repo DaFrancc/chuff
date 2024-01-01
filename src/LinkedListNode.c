@@ -37,5 +37,3 @@ int linkedlistnode_compare(const LinkedListNode* a, const LinkedListNode* b) {
 
     return treenode_compare(a->data, b->data);
 }
-
-

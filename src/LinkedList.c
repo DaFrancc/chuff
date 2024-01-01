@@ -7,6 +7,7 @@
 #include <errno.h>
 #include "../include/LinkedList.h"
 #include "../include/LinkedListNode.h"
+#include "../include/LLIterator.h"
 
 LinkedList* linkedlist_create() {
     LinkedList* list = malloc(sizeof(LinkedList));
@@ -130,6 +131,21 @@ void linkedlist_print(const LinkedList* list) {
         printf("%p\n", treenode_tostring(n->data));
         n = n->next;
     }
+}
+
+LinkedList* linkedlist_clone(LinkedList* list) {
+    LinkedList* res = malloc(sizeof(LinkedList));
+    res->head = NULL;
+    res->last = NULL;
+    res->size = list->size;
+
+    LLIterator* it = lliterator_make(list);
+
+    while(lliterator_hasnext(it)) {
+        linkedlist_push_back(res, lliterator_next(it));
+    }
+
+    return res;
 }
 
 void linkedlist_free(LinkedList* list) {

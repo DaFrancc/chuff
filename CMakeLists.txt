@@ -23,6 +23,12 @@ add_executable(chuff ${SOURCES} ${HEADERS}
         include/HashMap.h
         src/HashMap.c
         include/HashEntry.h
-        src/HashEntry.c)
+        src/HashEntry.c
+        src/HuffTree.c
+        include/HuffTree.h
+        include/RedBlackTree.h
+        src/RedBlackTree.c
+        include/RBNode.h
+        src/RBNode.c)
 
 target_link_libraries(chuff PRIVATE m)

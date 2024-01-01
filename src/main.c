@@ -17,6 +17,14 @@ int bad_file(const char* filePath) {
     return 1;
 }
 
+int oSize = 0;
+int cSize = 0;
+
+int preprocess(BitInputStream* bis, int format) {
+    oSize = 0;
+    cSize = 0;
+}
+
 int main(const int argc, const char *argv[]) {
     int format;
 
@@ -36,6 +44,8 @@ int main(const int argc, const char *argv[]) {
         if(!((bis = iostream_bitinputstream_make(argv[3])))) {
             return bad_file(argv[3]);
         }
+
+        int bits = preprocess(bis, format);
 
         iostream_bitinputstream_free(bis);
     }

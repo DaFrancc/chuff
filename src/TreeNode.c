@@ -3,10 +3,9 @@
 //
 #include <stdlib.h>
 #include <math.h>
+#include <stdio.h>
 
 #include "../include/TreeNode.h"
-
-#include <stdio.h>
 
 TreeNode* treenode_make(const int value, const int frequency) {
     TreeNode* tn = malloc(sizeof(TreeNode));
@@ -21,7 +20,7 @@ int treenode_compare(const TreeNode* a, const TreeNode* b) {
     return a->frequency - b->frequency;
 }
 
-static int lengthofint(int val) {
+static int lengthofint(const int val) {
     if(val == 0) {
         return 1;
     }
