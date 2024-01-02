@@ -19,5 +19,6 @@ typedef struct RBNode {
 } RBNode;
 
 RBNode* rbnode_make(Color color, int key, int value);
+void rbnode_copy(RBNode* dst, RBNode* src);
 
 #endif //RBNODE_H

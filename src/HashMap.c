@@ -9,7 +9,7 @@
 
 #include <string.h>
 
-HashMap* hashmap_make(const size_t size) {
+HashMap* hashmap_make(size_t size) {
     HashMap* map = malloc(sizeof(HashMap));
     map->size = size;
     map->count = 0;
@@ -22,7 +22,7 @@ HashMap* hashmap_make(const size_t size) {
     return map;
 }
 
-void hashmap_put(const HashMap* map, const int key, const char* value) {
+void hashmap_put(HashMap* map, int key, const char* value) {
     if(map->items[key]) {
         free(map->items[key]);
     }
