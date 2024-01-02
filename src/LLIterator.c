@@ -4,7 +4,7 @@
 
 #include "../include/LLIterator.h"
 
-LLIterator* lliterator_make(LinkedList* list) {
+LLIterator* lliterator_make(const LinkedList* list) {
     LLIterator* lli = malloc(sizeof(LLIterator));
 
     lli->list = list;

@@ -30,7 +30,7 @@ void priorityqueue_enqueue(PriorityQueue* pq, TreeNode* val) {
     }
 }
 
-TreeNode* priorityqueue_front(PriorityQueue* pq) {
+TreeNode* priorityqueue_front(const PriorityQueue* pq) {
     return pq->con->head->data;
 }
 

@@ -133,7 +133,7 @@ void linkedlist_print(const LinkedList* list) {
     }
 }
 
-LinkedList* linkedlist_clone(LinkedList* list) {
+LinkedList* linkedlist_clone(const LinkedList* list) {
     LinkedList* res = malloc(sizeof(LinkedList));
     res->head = NULL;
     res->last = NULL;

@@ -14,7 +14,7 @@ typedef struct LLIterator {
     LinkedListNode* lastReturned;
 } LLIterator;
 
-LLIterator* lliterator_make(LinkedList* list);
+LLIterator* lliterator_make(const LinkedList* list);
 int lliterator_hasnext(const LLIterator* it);
 TreeNode* lliterator_next(LLIterator* it);
 int lliterator_hasprevious(const LLIterator* it);
