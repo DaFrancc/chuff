@@ -1,3 +1,4 @@
 - Make red-black tree
 - Make hashmap
 - Finish program
+- Use BST instead of rbtree because the tree is not gonna be that deep
