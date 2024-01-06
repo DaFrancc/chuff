@@ -32,6 +32,7 @@ static TreeNode* createTree(PriorityQueue* pq) {
 HuffTree* hufftree_make_from_pq(PriorityQueue* pq) {
     HuffTree* hTree = malloc(sizeof(HuffTree));
 
+    hTree->size = pq->con->size;
     hTree->root = createTree(pq);
 
     return hTree;

@@ -11,6 +11,7 @@
 
 typedef struct HuffTree {
     TreeNode* root;
+    size_t size;
 } HuffTree;
 
 HuffTree* hufftree_make_from_pq(PriorityQueue* pq);

@@ -29,6 +29,9 @@ add_executable(chuff ${SOURCES} ${HEADERS}
         include/RedBlackTree.h
         src/RedBlackTree.c
         include/RBNode.h
-        src/RBNode.c)
+        src/RBNode.c
+        include/HuffHeader.h
+        src/HuffHeader.c
+)
 
 target_link_libraries(chuff PRIVATE m)

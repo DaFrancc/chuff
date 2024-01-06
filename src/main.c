@@ -5,6 +5,8 @@
 
 #include "../include/constants.h"
 #include "../include/IOStream.h"
+#include "../include/HuffTree.h"
+#include "../include/HashMap.h"
 
 int throw_error() {
     errno = EINVAL;
@@ -17,12 +19,79 @@ int bad_file(const char* filePath) {
     return 1;
 }
 
+HuffTree* make_hufftree(BitInputStream* bis) {
+    int arr[ALPH_SIZE] = {0};
+
+    int bits = iostream_read_bits(bis, BITS_PER_WORD);
+
+    while(bits != -1) {
+        arr[bits]++;
+        bits = iostream_read_bits(bis, BITS_PER_WORD);
+    }
+
+    PriorityQueue* pq = priorityqueue_make(linkedlist_create());
+
+    for (int i = 0; i < ALPH_SIZE; ++i) {
+        if(arr[i] != 0) {
+            priorityqueue_enqueue(pq, treenode_make(i, arr[i]));
+        }
+    }
+
+    priorityqueue_enqueue(pq, treenode_make(PSEUDO_EOF, 1));
+
+    return hufftree_make_from_pq(pq);
+}
+
 int oSize = 0;
 int cSize = 0;
+HuffTree* hTree = NULL;
+HashMap* valToPathMap = NULL;
+
+void create_map(TreeNode* n, char* path) {
+    if(treenode_isleaf(n)) {
+        hashmap_put(valToPathMap, n->value, path);
+    }
+    else {
+        // 3 = 1 byte for null terminator, 2 bytes for the 2 extra chars
+        char* newPath = calloc(strlen(path) + 3, sizeof(char));
+        sprintf(newPath, "%s%c", path, '0');
+        free(path);
+        create_map(n->left, newPath);
+        sprintf(newPath, "%s%c", newPath, '1');
+        create_map(n->right, newPath);
+    }
+}
+
+void calculate_size(int format) {
+    // Bits for magic number and header format
+    cSize += BITS_PER_LONG * 2;
+
+//    // Bits for header
+//    cSize += new HuffHeader(hTree, format).makeHeader().length();
+//
+//    // Bits for file content including PSEUDO_EOF
+//    for (TreeNode n : priorityQueue)
+//    {
+//        cSize += n.getFrequency() * valToPathMap.get(n.getValue()).length();
+//        oSize += n.getFrequency() * BITS_PER_WORD;
+//    }
+//
+//    // This is to account for the PSEUDO_EOF
+//    oSize -= BITS_PER_WORD;
+}
 
 int preprocess(BitInputStream* bis, int format) {
     oSize = 0;
     cSize = 0;
+
+    hTree = make_hufftree(bis);
+    valToPathMap = hashmap_make(hTree->size);
+
+    char* path = calloc(1, sizeof(char));
+
+    create_map(hTree->root, path);
+
+    calculate_size(format);
 }
 
 int main(const int argc, const char *argv[]) {
