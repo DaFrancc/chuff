@@ -16,5 +16,6 @@ void priorityqueue_enqueue(PriorityQueue* pq, TreeNode* val);
 TreeNode* priorityqueue_front(const PriorityQueue* pq);
 PriorityQueue* priorityqueue_clone(const PriorityQueue* pq);
 TreeNode* priorityqueue_dequeue(PriorityQueue* pq);
+LinkedList* priorityqueue_free(PriorityQueue* pq);
 
 #endif //PRIORITYQUEUE_H

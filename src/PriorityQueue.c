@@ -43,3 +43,7 @@ PriorityQueue* priorityqueue_clone(const PriorityQueue* pq) {
 TreeNode* priorityqueue_dequeue(PriorityQueue* pq) {
     return linkedlist_pop_front(pq->con);
 }
+
+LinkedList* priorityqueue_free(PriorityQueue* pq) {
+    free(pq);
+}

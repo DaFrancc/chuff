@@ -32,6 +32,12 @@ add_executable(chuff ${SOURCES} ${HEADERS}
         src/RBNode.c
         include/HuffHeader.h
         src/HuffHeader.c
+        include/StringBuilder.h
+        src/StringBuilder.c
+        include/StringLL.h
+        src/StringLL.c
+        include/SLLNode.h
+        src/SLLNode.c
 )
 
 target_link_libraries(chuff PRIVATE m)

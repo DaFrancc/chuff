@@ -7,6 +7,17 @@
 #include "../include/IOStream.h"
 #include "../include/HuffTree.h"
 #include "../include/HashMap.h"
+#include "../include/HuffHeader.h"
+#include "../include/LLIterator.h"
+
+int bPreprocessRan = 0;
+size_t oSize = 0;
+size_t cSize = 0;
+int format;
+HuffTree* hTree = NULL;
+HashMap* valToPathMap = NULL;
+HuffHeader* huffHeader = NULL;
+PriorityQueue* priorityQueue = NULL;
 
 int throw_error() {
     errno = EINVAL;
@@ -29,23 +40,21 @@ HuffTree* make_hufftree(BitInputStream* bis) {
         bits = iostream_read_bits(bis, BITS_PER_WORD);
     }
 
-    PriorityQueue* pq = priorityqueue_make(linkedlist_create());
+    priorityQueue = priorityqueue_make(linkedlist_create());
 
     for (int i = 0; i < ALPH_SIZE; ++i) {
         if(arr[i] != 0) {
-            priorityqueue_enqueue(pq, treenode_make(i, arr[i]));
+            priorityqueue_enqueue(priorityQueue, treenode_make(i, arr[i]));
         }
     }
 
-    priorityqueue_enqueue(pq, treenode_make(PSEUDO_EOF, 1));
+    priorityqueue_enqueue(priorityQueue, treenode_make(PSEUDO_EOF, 1));
 
-    return hufftree_make_from_pq(pq);
+    PriorityQueue* clone = priorityqueue_clone(priorityQueue);
+    HuffTree* tree = hufftree_make_from_pq(clone);
+    free(clone);
+    return tree;
 }
-
-int oSize = 0;
-int cSize = 0;
-HuffTree* hTree = NULL;
-HashMap* valToPathMap = NULL;
 
 void create_map(TreeNode* n, char* path) {
     if(treenode_isleaf(n)) {
@@ -62,25 +71,25 @@ void create_map(TreeNode* n, char* path) {
     }
 }
 
-void calculate_size(int format) {
+void calculate_size(int headerFormat) {
     // Bits for magic number and header format
     cSize += BITS_PER_LONG * 2;
 
-//    // Bits for header
-//    cSize += new HuffHeader(hTree, format).makeHeader().length();
-//
-//    // Bits for file content including PSEUDO_EOF
-//    for (TreeNode n : priorityQueue)
-//    {
-//        cSize += n.getFrequency() * valToPathMap.get(n.getValue()).length();
-//        oSize += n.getFrequency() * BITS_PER_WORD;
-//    }
-//
-//    // This is to account for the PSEUDO_EOF
-//    oSize -= BITS_PER_WORD;
+    huffHeader = huffheader_make(hTree, headerFormat);
+    cSize += strlen(huffheader_create_header(huffHeader));
+
+    LLIterator* it = lliterator_make(priorityQueue->con);
+
+    while(lliterator_hasnext(it)) {
+        TreeNode* n = lliterator_next(it);
+        cSize += n->frequency * strlen(hashmap_get(valToPathMap, n->value));
+        oSize += n->frequency * BITS_PER_WORD;
+    }
+
+    oSize -= BITS_PER_WORD; // Account for PSEUDO_EOF
 }
 
-int preprocess(BitInputStream* bis, int format) {
+size_t preprocess(BitInputStream* bis, int headerFormat) {
     oSize = 0;
     cSize = 0;
 
@@ -91,18 +100,26 @@ int preprocess(BitInputStream* bis, int format) {
 
     create_map(hTree->root, path);
 
-    calculate_size(format);
+    calculate_size(headerFormat);
+
+    format = headerFormat;
+
+    bPreprocessRan = 1;
+
+    printf("Orignal: %zu\nCompressed: %zu\n", oSize, cSize);
+
+    return oSize - cSize;
 }
 
 int main(const int argc, const char *argv[]) {
-    int format;
+    int headerFormat;
 
     if(argc == 5 && strcmp(argv[1], "compress") == 0) {
         if(strcmp(argv[2], "-t") == 0) {
-            format = STORE_TREE;
+            headerFormat = STORE_TREE;
         }
         else if(strcmp(argv[2], "-c") == 0) {
-            format = STORE_COUNTS;
+            headerFormat = STORE_COUNTS;
         }
         else {
             return throw_error();
@@ -114,7 +131,7 @@ int main(const int argc, const char *argv[]) {
             return bad_file(argv[3]);
         }
 
-        int bits = preprocess(bis, format);
+        int bits = preprocess(bis, headerFormat);
 
         iostream_bitinputstream_free(bis);
     }
